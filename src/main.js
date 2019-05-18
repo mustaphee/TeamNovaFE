@@ -10,7 +10,7 @@ import axios from 'axios';
 import NProgress from 'nprogress';
 Vue.config.productionTip = false;
 
-const baseUrl = 'http://lmsapi.test/api/'
+const baseUrl = 'http://2cee5f22.ngrok.io/api'
 
 Vue.mixin({
   methods: {
@@ -59,7 +59,7 @@ Vue.mixin({
       const instance = axios.create({
         baseURL: baseUrl,
         headers: {
-          'Authorization': 'Bearer ' + store.getters.getToken
+          'Authorization': 'Token ' + store.getters.getToken
         }
       })
 
@@ -82,6 +82,13 @@ Vue.mixin({
     app_name: 'TeleMedicina',
     rules: {
       required: (value) => !!value || 'Required.',
+      phone: (value) => {
+        if(value > 11 || value < 11){
+          return 'Invalid Phone Number'
+          } else {
+          return true
+        }
+      },
       email: (value) => {
         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return pattern.test(value) || 'Invalid e-mail.';

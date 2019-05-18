@@ -7,11 +7,13 @@
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
-                  <img src="/static/m.png" alt="Vue Material Admin" width="120" height="120">
-                  <h1 class="flex my-4 primary--text text-xs-center">Electrical Engineering Library</h1>
-                </div>                
+                  <h1 class="flex my-4 primary--text text-xs-center">{{app_name}}</h1>
+                  <h2 class="flex text-xs-center">Login</h2>
+                  <hr>
+                  <br>
+                </div>
                 <v-form>
-                  <v-text-field append-icon="person" name="login" label="Login" type="email" v-model="model.email" :rules="[rules.required, rules.email]"></v-text-field>
+                  <v-text-field append-icon="person" name="login" label="Login" type="email" v-model="model.email" :rules="[rules.required, rules.phone]"></v-text-field>
                   <v-text-field append-icon="lock" name="password" label="Password" id="password" type="password" v-model="model.password" :rules="[rules.required]"></v-text-field>
                 </v-form>
               </v-card-text>
@@ -42,17 +44,23 @@ export default {
     login () {
       if(this.model.email !== '' && this.model.password !== ''){
         this.loading = true;
-        this.$http().post('login', this.model)
-            .then((resp)=>{
+        console.log(this.model)
+        this.$http().post('rest-auth/login/', {"username": this.model.email, "password": this.model.password})
+            .then((resp)=> {
                 console.log(resp)
                 this.$callSnack(resp.data.message, 'success')
-                this.$store.commit('setToken', resp.data.token)
-                this.$store.commit('setUser', resp.data.data)
-                this.$router.push('/dash')
+                this.$store.commit('setToken', resp.data.key)
+            }).then((res)=>{
+              this.$httpT().get('user/').then((res)=>{
+                  console.log(res.data)
+                  this.$store.commit('setUser', res.data)
+                  this.$router.push('/dash')
+              })
+
             })
             .catch((err)=>{
                 console.log(err.response.data)
-                this.$callSnack(err.response.data.message, 'danger')
+                this.$callSnack(err.response.data['non_field_errors'][0], 'danger')
             })
             .finally(()=>{
                 this.loading = false
