@@ -169,7 +169,7 @@
                         })
                         .catch(err=>{
                             console.log(err)
-                            this.$callSnack('A user with that phone number already exists')
+                            this.$callSnack('A user with that phone number already exists', 'warning')
                         })
                         .finally(()=>this.loading = false)
                 }else{
@@ -188,7 +188,7 @@
                         })
                         .catch(err=>{
                             console.log(err)
-                            this.$callSnack('A user with that phone number already exists')
+                            this.$callSnack('A user with that phone number already exists', 'warning')
                         })
                         .finally(()=>this.loading = false)
                 }else{
