@@ -11,7 +11,7 @@
     <v-toolbar color="primary darken-1" dark>
       <img v-bind:src="computeLogo" height="36" alt="Vue Material Admin Template">
       <v-toolbar-title class="ml-0 pl-3">
-        <span class="hidden-sm-and-down">Electrical Library</span>
+        <span class="hidden-sm-and-down">{{app_name}}</span>
       </v-toolbar-title>
     </v-toolbar>
     <vue-perfect-scrollbar class="drawer-menu--scroll" :settings="scrollSettings">
@@ -120,13 +120,13 @@ export default {
         to: '/dash',
       },
         {
-            title:'Members',
-            icon: 'people',
+            title:'History',
+            icon: 'history',
             to: '/members',
         },
         {
-            title:'Staff',
-            icon: 'people',
+            title:'Chat',
+            icon: 'forum',
             to: '/staff',
         },
 
