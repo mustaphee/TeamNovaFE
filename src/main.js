@@ -83,7 +83,7 @@ Vue.mixin({
     rules: {
       required: (value) => !!value || 'Required.',
       phone: (value) => {
-        if(value > 11 || value < 11){
+        if(value.length > 11 || value.length < 11){
           return 'Invalid Phone Number'
           } else {
           return true
