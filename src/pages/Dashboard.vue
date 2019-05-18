@@ -1,6 +1,6 @@
 <template>
     <div id="pageDashboard">
-        <v-container grid-list-xl fluid>
+        <v-container v-if="user.user_type === 'P' " grid-list-xl fluid>
             <v-layout justify-center row wrap>
                 <v-dialog v-model="showForm" persistent max-width="500px">
                     <v-container   slot="activator" style="margin: 0 auto">
@@ -45,6 +45,11 @@
                 </v-dialog>
             </v-layout>
         </v-container>
+
+        <v-container v-else grid-list-xl fluid>
+            <v-layout justify-center row wrap>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
@@ -60,11 +65,16 @@
                 message:''
             },
             specialities:[],
-            user:this.$store.getters.user
+
         }),
         mounted() {
             this.fetchSpecialities()
-            console.log(this.user)
+        },
+        computed:{
+          user(){
+              console.log(this.$store.getter.user)
+              return this.$store.getter.user
+          }
         },
         methods:{
             fetchSpecialities(){

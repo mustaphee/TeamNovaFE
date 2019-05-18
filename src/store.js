@@ -27,7 +27,7 @@ export default new Vuex.Store({
       return !!state.token
     },
     user(state){
-      return user
+      return state.user
     }
   },
   mutations: {
