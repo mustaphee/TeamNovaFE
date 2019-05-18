@@ -11,7 +11,7 @@
     <v-toolbar color="primary darken-1" dark>
       <img v-bind:src="computeLogo" height="36" alt="Vue Material Admin Template">
       <v-toolbar-title class="ml-0 pl-3">
-        <span class="hidden-sm-and-down">{{app_name}}</span>
+        <span class="hidden-sm-and-down">TeleMedicina</span>
       </v-toolbar-title>
     </v-toolbar>
     <vue-perfect-scrollbar class="drawer-menu--scroll" :settings="scrollSettings">
@@ -38,6 +38,31 @@
               </v-list-tile-action>
               <v-list-tile-content>
                   <v-list-tile-title>{{item.title}}</v-list-tile-title>
+              </v-list-tile-content>
+
+          </v-list-tile>
+          <v-list-tile   v-if="$store.state.user.user_type === 'D'">
+              <v-list-tile-action>
+                  <v-icon>people</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                  <v-list-tile-title>Patients</v-list-tile-title>
+              </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile v-else>
+              <v-list-tile-action>
+                  <v-icon>history</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                  <v-list-tile-title>Medical History</v-list-tile-title>
+              </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile >
+              <v-list-tile-action>
+                  <v-icon>settings</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                  <v-list-tile-title>Settings</v-list-tile-title>
               </v-list-tile-content>
           </v-list-tile>
 <!--        <template v-for="(item, i) in menus">-->
@@ -120,15 +145,11 @@ export default {
         to: '/dash',
       },
         {
-            title:'History',
-            icon: 'history',
-            to: '/members',
-        },
-        {
-            title:'Chat',
+            title:'Chats',
             icon: 'forum',
-            to: '/staff',
+            to: '/chat',
         },
+
 
     ]
   }),

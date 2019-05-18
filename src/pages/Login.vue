@@ -48,7 +48,7 @@ export default {
         this.$http().post('rest-auth/login/', {"username": this.model.email, "password": this.model.password})
             .then((resp)=> {
                 console.log(resp)
-                this.$callSnack(resp.data.message, 'success')
+                this.$callSnack('Login successful. Redirecting!', 'success')
                 this.$store.commit('setToken', resp.data.key)
             }).then((res)=>{
               this.$httpT().get('user/').then((res)=>{
