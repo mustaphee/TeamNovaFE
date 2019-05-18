@@ -7,43 +7,45 @@
                         <v-card class="elevation-1 pa-3">
                             <v-card-text>
                                 <div class="layout column align-center">
-                                    <h1 class="flex my-4 primary--text text-xs-center">Electrical Engineering Library</h1>
-                                    <h2 class="flex text-xs-center">Member Registration</h2>
+                                    <h1 class="flex my-4 primary--text text-xs-center">{{app_name}}</h1>
+                                    <h2 class="flex text-xs-center">Registration</h2>
+                                    <hr>
+                                    <br>
                                 </div>
-                                <div v-if="successful">
-                                    Registration successful. You will receive an email when your account has been approved.
+                                <div class="basic">
+                                    <span class="title grey--text text--darken-1">Register as : {{post ? 'Medical Practitioner' : 'Patient'}} </span>
+<!--                                    <v-radio-group v-model="model.post" :mandatory="true" row>-->
+<!--                                        <v-radio label="Doctor" value="doctor" ></v-radio>-->
+<!--                                        <v-radio label="Patient" value="patient" ></v-radio>-->
+<!--                                    </v-radio-group>-->
+                                    <v-switch v-model="post" color="green" :label="post? 'Medical Practitioner' : 'Patient'"></v-switch>
                                 </div>
-                                <v-form  v-else ref="regForm" :lazy-validation="true">
-                                    <v-text-field name="first_name" label="First Name" type="text" v-model="model.first_name" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field name="last_name" label="Last Name" type="text" v-model="model.last_name" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field label="Other Names" v-model="model.other_names"></v-text-field>
-                                    <v-text-field name="login" label="Email Address" type="email" v-model="model.email" :rules="[rules.email, rules.required]"></v-text-field>
-                                    <v-text-field name="login" label="School ID" type="text" v-model="model.school_id" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field name="login" label="Phone Number" type="number" v-model="model.phone_number" :rules="[rules.required, (v)=> !isNaN(v) || 'digits only', (v)=> v.length === 11 || 'accepted length is 11']"></v-text-field>
-                                    <v-text-field name="password" label="Password" id="password" type="password" v-model="model.password" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field label="Confirm Password" type="password" v-model="model.password_c" :rules="[rules.required, (val)=> val === model.password  || 'Password does not match']"></v-text-field>
-                                    <div class="basic">
-                                        <span class="title grey--text text--darken-1">Role: {{model.post}} </span>
-                                        <v-radio-group v-model="model.post" :mandatory="true" row>
-                                            <v-radio label="Student" value="student" ></v-radio>
-                                            <v-radio label="Lecturer" value="lecturer" ></v-radio>
-                                            <v-radio label="Staff" value="staff" ></v-radio>
-                                        </v-radio-group>
-                                    </div>
-                                    <v-text-field label="Address" type="text" v-model="model.address"></v-text-field>
-                                    <p>Passport : {{model.passport.name}}</p>
-                                    <v-btn @click="$refs.fileInput.click()" color="primary">Upload Passport</v-btn>
-                                    <input type="file" ref="fileInput" @change="fileSelected($event.target.name, $event.target.files)" accept="image/png" style="display:none">
-                                    <p>ID Card : {{model.id_card_image.name}}</p>
-                                    <v-btn @click="$refs.fileInput2.click()" color="primary">Upload ID Card Image</v-btn>
-                                    <input type="file" ref="fileInput2" @change="file2Selected($event.target.name, $event.target.files)" accept="image/png" style="display:none">
+                                <v-form v-if="post" ref="docRegForm" :lazy-validation="true">
+
+                                    <v-text-field solo  label="Full Name" type="text" v-model="doc.full_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field  solo label="Address" type="text" v-model="doc.address"></v-text-field>
+                                    <v-text-field solo label="Phone Number" type="number" v-model="doc.phone_number"></v-text-field>
+                                    <v-select
+                                            :items="specialities"
+                                            label="Speciality"
+                                            solo
+                                            v-model="doc.speciality"
+                                    ></v-select>
+
+                                </v-form>
+                                <v-form v-else ref="patRegForm" :lazy-validation="true">
+
+                                    <v-text-field solo label="Full Name" type="text" v-model="pat.full_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo label="Address" type="text" v-model="pat.address"></v-text-field>
+                                    <v-text-field solo label="Phone Number" type="number" ></v-text-field>
+                                    <v-text-field solo label="Occupation" type="text" v-model="pat.occupation"></v-text-field>
 
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn v-if="successful" block color="primary" @click="successful=false">Close</v-btn>
-                                <v-btn v-else block color="primary" type="submit" @click="register" :loading="loading">Register</v-btn>
+                                <v-btn v-if="!post" block color="primary" @click="patReg">Register</v-btn>
+                                <v-btn v-else block color="primary" type="submit" @click="docReg" :loading="loading">Register</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-flex>
@@ -59,23 +61,42 @@
         data: () => ({
             loading: false,
             successful: false,
-            model: {
+            specialities: ['sdfasdfa', 'sdfada','sdfa'],
+            post: false,
+            doc: {
                 first_name: '',
                 last_name: '',
-                other_names: '',
-                school_id:'',
+                speciality: '',
                 email: '',
                 password: '',
                 password_c: '',
-                post: '',
+                phone_number: '',
+                address: '',
+                passport:'',
+                id_card_image:''
+            },
+            pat: {
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                password_c: '',
                 phone_number: '',
                 address: '',
                 passport:'',
                 id_card_image:''
             }
         }),
-
+        mounted(){
+            this.fetchSpecialities()
+        },
         methods: {
+            docReg(){
+
+            },
+            patReg(){
+
+            },
             register () {
                 if(this.$refs.regForm.validate() && this.model.passport !=='' && this.model.id_card_image !== ''){
                     this.loading = true;
@@ -97,6 +118,7 @@
                         this.model.id_card_image = ''
                         this.model.passport = ''
                         this.successful = true
+                        this.$router.push('/login')
                     })
                     .catch((err)=>{
                         console.log(err)
@@ -115,13 +137,8 @@
                 }
 
             },
-            fileSelected(name, files){
-                    this.model.passport =  files[0]
-                console.log(files)
-            },
-            file2Selected(name, files){
-                this.model.id_card_image =  files[0]
-                console.log(files)
+            fetchSpecialities(){
+
             }
         }
 

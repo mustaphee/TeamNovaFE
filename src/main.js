@@ -51,6 +51,7 @@ Vue.mixin({
     }
   },
   data: ()=> ({
+    app_name: 'TeleMedicina',
     rules: {
       required: (value) => !!value || 'Required.',
       email: (value) => {
