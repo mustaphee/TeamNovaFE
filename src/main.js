@@ -10,7 +10,7 @@ import axios from 'axios';
 import NProgress from 'nprogress';
 Vue.config.productionTip = false;
 
-const baseUrl = 'http://lmsapi.test/api/'
+const baseUrl = 'http://2cee5f22.ngrok.io/api'
 
 Vue.mixin({
   methods: {

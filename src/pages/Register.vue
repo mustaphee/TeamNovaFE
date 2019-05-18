@@ -24,14 +24,16 @@
 
                                     <v-text-field solo  label="First Name" type="text" v-model="doc.first_name" :rules="[rules.required]"></v-text-field>
                                     <v-text-field solo  label="Last Name" type="text" v-model="doc.last_name" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field  solo label="Address" type="text" v-model="doc.address"></v-text-field>
-                                    <v-text-field solo label="Phone Number" type="number" v-model="doc.phone_number"></v-text-field>
+                                    <v-text-field solo  label="Email Address" type="text" v-model="doc.email" :rules="[rules.required, rules.email]"></v-text-field>
+                                    <v-text-field solo label="Phone Number" type="number" v-model="doc.username" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field  solo label="Address" type="text" v-model="doc.address" :rules="[rules.required]"></v-text-field>
                                     <v-select
                                             :items="specialities"
                                             label="Speciality"
                                             solo
                                             v-model="doc.speciality"
                                     ></v-select>
+                                    <v-text-field solo label="Hospital" type="text" v-model="doc.hospital" :counter="50" :rules="[rules.required, (v) => v.length < 51 || 'Invalid field length']"></v-text-field>
                                     <v-menu
                                             class="pr-2"
                                             ref="docdob"
@@ -58,8 +60,8 @@
                                             <v-btn flat color="primary" @click="$refs.docdob.save(doc.dob)">OK</v-btn>
                                         </v-date-picker>
                                     </v-menu>
-                                    <v-text-field solo name="password" label="Password" id="password" type="password" v-model="doc.password" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field solo  label="Confirm Password" type="password" v-model="doc.password_c" :rules="[rules.required, (val)=> val === doc.password  || 'Password does not match']"></v-text-field>
+                                    <v-text-field solo name="password" label="Password" id="password" type="password" v-model="doc.password1" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo  label="Confirm Password" type="password" v-model="doc.password2" :rules="[rules.required, (val)=> val === doc.password1  || 'Password does not match']"></v-text-field>
 
 
                                 </v-form>
@@ -67,8 +69,8 @@
 
                                     <v-text-field solo label="First Name" type="text" v-model="pat.first_name" :rules="[rules.required]"></v-text-field>
                                     <v-text-field solo label="Last Name" type="text" v-model="pat.last_name" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field solo label="Address" type="text" v-model="pat.address"></v-text-field>
-                                    <v-text-field solo label="Phone Number" type="number" ></v-text-field>
+                                    <v-text-field solo label="Address" type="text" v-model="pat.address" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo label="Phone Number" type="number" v-model="pat.username" :rules="[rules.required]"></v-text-field>
                                     <v-menu
                                             class="pr-2"
                                             ref="patdob"
@@ -95,17 +97,17 @@
                                             <v-btn flat color="primary" @click="$refs.patdob.save(pat.dob)">OK</v-btn>
                                         </v-date-picker>
                                     </v-menu>
-                                    <v-text-field solo label="Occupation" type="text" v-model="pat.occupation"></v-text-field>
-                                    <v-text-field solo  name="password" label="Password" id="password" type="password" v-model="pat.password" :rules="[rules.required]"></v-text-field>
-                                    <v-text-field  solo  label="Confirm Password" type="password" v-model="pat.password_c" :rules="[rules.required, (val)=> val === pat.password  || 'Password does not match']"></v-text-field>
+                                    <v-text-field solo label="Occupation" type="text" v-model="pat.occupation" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo  name="password" label="Password" id="password" type="password" v-model="pat.password1" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field  solo  label="Confirm Password" type="password" v-model="pat.password2" :rules="[rules.required, (val)=> val === pat.password1  || 'Password does not match']"></v-text-field>
 
 
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn v-if="!post" block color="primary" @click="patReg">Register</v-btn>
-                                <v-btn v-else block color="primary" type="submit" @click="docReg" :loading="loading">Register</v-btn>
+                                <v-btn v-if="!post" block color="primary" :loading="loading" @click="patReg">Register</v-btn>
+                                <v-btn v-else block color="primary"  @click="docReg" :loading="loading">Register</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-flex>
@@ -130,25 +132,25 @@
                 last_name: '',
                 speciality: '',
                 email: '',
-                password: '',
-                password_c: '',
-                phone_number: '',
+                password1: '',
+                password2: '',
+                username: '',
+                occupation:'Medical Practitioner',
                 address: '',
-                passport:'',
-                id_card_image:'',
-                dob: new Date().toISOString().substr(0,10)
+                dob: new Date().toISOString().substr(0,10),
+                hospital: '',
+                user_type:'D'
             },
             pat: {
                 first_name: '',
                 last_name: '',
-                email: '',
-                password: '',
-                password_c: '',
-                phone_number: '',
+                password1: '',
+                password2: '',
+                username: '',
                 address: '',
-                passport:'',
-                id_card_image:'',
-                dob: new Date().toISOString().substr(0,10)
+                dob: new Date().toISOString().substr(0,10),
+                occupation:'',
+                user_type:'P'
 
             }
         }),
@@ -157,10 +159,41 @@
         },
         methods: {
             docReg(){
+                if(this.$refs.docRegForm.validate()){
+                    this.loading = true
+                    this.$http().post('rest-auth/registration/', this.doc)
+                        .then(res=>{
+                            console.log(res)
+                            this.$store.commit('setToken', res.data.key)
+                            this.$router.push('dash')
+                        })
+                        .catch(err=>{
+                            console.log(err)
+                            this.$callSnack('A user with that phone number already exists')
+                        })
+                        .finally(()=>this.loading = false)
+                }else{
+                    this.$callSnack('All fields are required', 'warning')
+                }
 
             },
             patReg(){
-
+                if(this.$refs.patRegForm.validate()){
+                    this.loading = true
+                    this.$http().post('rest-auth/registration/', this.pat)
+                        .then(res=>{
+                            console.log(res)
+                            this.$store.commit('setToken', res.data.key)
+                            this.$router.push('dash')
+                        })
+                        .catch(err=>{
+                            console.log(err)
+                            this.$callSnack('A user with that phone number already exists')
+                        })
+                        .finally(()=>this.loading = false)
+                }else{
+                    this.$callSnack('All fields are required', 'warning')
+                }
             },
             register () {
                 if(this.$refs.regForm.validate() && this.model.passport !=='' && this.model.id_card_image !== ''){
