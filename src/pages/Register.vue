@@ -22,7 +22,8 @@
                                 </div>
                                 <v-form v-if="post" ref="docRegForm" :lazy-validation="true">
 
-                                    <v-text-field solo  label="Full Name" type="text" v-model="doc.full_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo  label="First Name" type="text" v-model="doc.first_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo  label="Last Name" type="text" v-model="doc.last_name" :rules="[rules.required]"></v-text-field>
                                     <v-text-field  solo label="Address" type="text" v-model="doc.address"></v-text-field>
                                     <v-text-field solo label="Phone Number" type="number" v-model="doc.phone_number"></v-text-field>
                                     <v-select
@@ -31,6 +32,32 @@
                                             solo
                                             v-model="doc.speciality"
                                     ></v-select>
+                                    <v-menu
+                                            class="pr-2"
+                                            ref="docdob"
+                                            lazy
+                                            :close-on-content-click="false"
+                                            v-model="docmodal"
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            :nudge-bottom="-22"
+                                            max-width="290px"
+                                            :return-value.sync="doc.dob"
+                                    >
+                                        <v-text-field
+                                                slot="activator"
+                                                label="Date of Birth"
+                                                v-model="doc.dob"
+                                                solo
+                                                readonly
+                                        ></v-text-field>
+                                        <v-date-picker v-model="doc.dob" no-title scrollable>
+                                            <v-spacer></v-spacer>
+                                            <v-btn flat color="primary" @click="docmodal = false">Cancel</v-btn>
+                                            <v-btn flat color="primary" @click="$refs.docdob.save(doc.dob)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-menu>
                                     <v-text-field solo name="password" label="Password" id="password" type="password" v-model="doc.password" :rules="[rules.required]"></v-text-field>
                                     <v-text-field solo  label="Confirm Password" type="password" v-model="doc.password_c" :rules="[rules.required, (val)=> val === doc.password  || 'Password does not match']"></v-text-field>
 
@@ -38,9 +65,36 @@
                                 </v-form>
                                 <v-form v-else ref="patRegForm" :lazy-validation="true">
 
-                                    <v-text-field solo label="Full Name" type="text" v-model="pat.full_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo label="First Name" type="text" v-model="pat.first_name" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo label="Last Name" type="text" v-model="pat.last_name" :rules="[rules.required]"></v-text-field>
                                     <v-text-field solo label="Address" type="text" v-model="pat.address"></v-text-field>
                                     <v-text-field solo label="Phone Number" type="number" ></v-text-field>
+                                    <v-menu
+                                            class="pr-2"
+                                            ref="patdob"
+                                            lazy
+                                            :close-on-content-click="false"
+                                            v-model="patmodal"
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            :nudge-bottom="-22"
+                                            max-width="290px"
+                                            :return-value.sync="pat.dob"
+                                    >
+                                        <v-text-field
+                                                slot="activator"
+                                                label="Date of Birth"
+                                                v-model="pat.dob"
+                                                solo
+                                                readonly
+                                        ></v-text-field>
+                                        <v-date-picker v-model="pat.dob" no-title scrollable>
+                                            <v-spacer></v-spacer>
+                                            <v-btn flat color="primary" @click="patmodal = false">Cancel</v-btn>
+                                            <v-btn flat color="primary" @click="$refs.patdob.save(pat.dob)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-menu>
                                     <v-text-field solo label="Occupation" type="text" v-model="pat.occupation"></v-text-field>
                                     <v-text-field solo  name="password" label="Password" id="password" type="password" v-model="pat.password" :rules="[rules.required]"></v-text-field>
                                     <v-text-field  solo  label="Confirm Password" type="password" v-model="pat.password_c" :rules="[rules.required, (val)=> val === pat.password  || 'Password does not match']"></v-text-field>
@@ -69,6 +123,8 @@
             successful: false,
             specialities: ['sdfasdfa', 'sdfada','sdfa'],
             post: false,
+            docmodal:false,
+            patmodal:false,
             doc: {
                 first_name: '',
                 last_name: '',
@@ -79,7 +135,8 @@
                 phone_number: '',
                 address: '',
                 passport:'',
-                id_card_image:''
+                id_card_image:'',
+                dob: new Date().toISOString().substr(0,10)
             },
             pat: {
                 first_name: '',
@@ -90,7 +147,9 @@
                 phone_number: '',
                 address: '',
                 passport:'',
-                id_card_image:''
+                id_card_image:'',
+                dob: new Date().toISOString().substr(0,10)
+
             }
         }),
         mounted(){
