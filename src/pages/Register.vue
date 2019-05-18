@@ -29,6 +29,8 @@
                                     <v-text-field  solo label="Address" type="text" v-model="doc.address" :rules="[rules.required]"></v-text-field>
                                     <v-select
                                             :items="specialities"
+                                            item-text="title"
+                                            item-value="id"
                                             label="Speciality"
                                             solo
                                             v-model="doc.speciality"
@@ -123,7 +125,7 @@
         data: () => ({
             loading: false,
             successful: false,
-            specialities: ['sdfasdfa', 'sdfada','sdfa'],
+            specialities: [],
             post: false,
             docmodal:false,
             patmodal:false,
@@ -165,6 +167,10 @@
                         .then(res=>{
                             console.log(res)
                             this.$store.commit('setToken', res.data.key)
+                            this.$httpT().get('user')
+                                .then(res=>{
+                                    console.log(res)
+                                })
                             this.$router.push('dash')
                         })
                         .catch(err=>{
@@ -184,6 +190,11 @@
                         .then(res=>{
                             console.log(res)
                             this.$store.commit('setToken', res.data.key)
+                            this.$httpT().get('user')
+                                .then(res=>{
+                                    console.log(res)
+                                    this.$store.commit('setUser', res.data)
+                                })
                             this.$router.push('dash')
                         })
                         .catch(err=>{
@@ -236,7 +247,11 @@
 
             },
             fetchSpecialities(){
-
+                this.$http().get('/doctors/specialities/')
+                    .then(res=>{
+                        console.log(res)
+                        this.specialities = res.data
+                    })
             }
         }
 

@@ -59,7 +59,7 @@ Vue.mixin({
       const instance = axios.create({
         baseURL: baseUrl,
         headers: {
-          'Authorization': 'Bearer ' + store.getters.getToken
+          'Authorization': 'Token ' + store.getters.getToken
         }
       })
 
