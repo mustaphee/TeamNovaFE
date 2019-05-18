@@ -7,13 +7,14 @@ import "./registerServiceWorker";
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'font-awesome/css/font-awesome.css'
 import axios from 'axios';
+import NProgress from 'nprogress';
 Vue.config.productionTip = false;
 
 const baseUrl = 'http://lmsapi.test/api/'
 
 Vue.mixin({
-  methods:{
-    $callSnack: function(text, type){
+  methods: {
+    $callSnack: function (text, type) {
       console.log('calling snack')
       let color = ''
       switch (type) {
@@ -21,13 +22,13 @@ Vue.mixin({
           color = 'green';
           break;
         case 'warning':
-          color='orange';
+          color = 'orange';
           break;
         case 'danger':
-          color='red';
+          color = 'red';
           break;
         case 'info':
-          color='blue';
+          color = 'blue';
           break;
       }
       window.getApp.snackbar = {
@@ -36,18 +37,45 @@ Vue.mixin({
         color: color
       }
     },
-    $http: function(){
-      return axios.create({
-        baseURL: baseUrl
+    $http: function () {
+      const instance = axios.create({
+        baseURL: baseUrl,
       })
+
+      instance.interceptors.request.use(config => {
+        NProgress.start()
+        return config
+      })
+
+      // before a response is returned stop nprogress
+      instance.interceptors.response.use(response => {
+        NProgress.done()
+        return response
+      })
+      return instance
     },
-    $httpT: function(){
-      return axios.create({
+    $httpT: function () {
+
+      const instance = axios.create({
         baseURL: baseUrl,
         headers: {
-          'Authorization': 'Bearer '+ store.getters.getToken
+          'Authorization': 'Bearer ' + store.getters.getToken
         }
       })
+
+      instance.interceptors.request.use(config => {
+        NProgress.start()
+        return config
+      })
+
+      // before a response is returned stop nprogress
+      instance.interceptors.response.use(response => {
+        NProgress.done()
+        return response
+      })
+      return instance
+
+
     }
   },
   data: ()=> ({

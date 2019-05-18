@@ -31,6 +31,9 @@
                                             solo
                                             v-model="doc.speciality"
                                     ></v-select>
+                                    <v-text-field solo name="password" label="Password" id="password" type="password" v-model="doc.password" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field solo  label="Confirm Password" type="password" v-model="doc.password_c" :rules="[rules.required, (val)=> val === doc.password  || 'Password does not match']"></v-text-field>
+
 
                                 </v-form>
                                 <v-form v-else ref="patRegForm" :lazy-validation="true">
@@ -39,6 +42,9 @@
                                     <v-text-field solo label="Address" type="text" v-model="pat.address"></v-text-field>
                                     <v-text-field solo label="Phone Number" type="number" ></v-text-field>
                                     <v-text-field solo label="Occupation" type="text" v-model="pat.occupation"></v-text-field>
+                                    <v-text-field solo  name="password" label="Password" id="password" type="password" v-model="pat.password" :rules="[rules.required]"></v-text-field>
+                                    <v-text-field  solo  label="Confirm Password" type="password" v-model="pat.password_c" :rules="[rules.required, (val)=> val === pat.password  || 'Password does not match']"></v-text-field>
+
 
                                 </v-form>
                             </v-card-text>
