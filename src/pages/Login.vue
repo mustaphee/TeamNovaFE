@@ -13,7 +13,7 @@
                   <br>
                 </div>
                 <v-form>
-                  <v-text-field append-icon="person" name="login" label="Login" type="email" v-model="model.email" :rules="[rules.required, rules.phone]"></v-text-field>
+                  <v-text-field append-icon="person" name="login" label="Phone Number" type="email" v-model="model.email" :rules="[rules.required, rules.phone]"></v-text-field>
                   <v-text-field append-icon="lock" name="password" label="Password" id="password" type="password" v-model="model.password" :rules="[rules.required]"></v-text-field>
                 </v-form>
               </v-card-text>
