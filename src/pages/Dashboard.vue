@@ -48,6 +48,7 @@
 
         <v-container v-else grid-list-xl fluid>
             <v-layout justify-center row wrap>
+                Welcome Doctor below are the recent requests
             </v-layout>
         </v-container>
     </div>
@@ -72,8 +73,8 @@
         },
         computed:{
           user(){
-              console.log(this.$store.getter.user)
-              return this.$store.getter.user
+              console.log(this.$store.state.user)
+              return this.$store.state.user
           }
         },
         methods:{
